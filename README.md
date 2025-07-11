@@ -20,16 +20,16 @@ JavaScript (Vanilla)
 
 👥 فريق المشروع / Team
 شركة رمانة / Rummana Co.
-https://img.shields.io/badge/Website-rummana.bio.link-blue
-https://img.shields.io/badge/Twitter-@RummanaOfficial-blue
-https://img.shields.io/badge/Facebook-RummanaOfficial1-blue
-https://img.shields.io/badge/Instagram-@rummana__official-red
+https://rummana.bio.link
+https://x.com/RummanaOfficial
+https://facebook.com/RummanaOfficial1
+https://instagram.com/rummana_official
 📧 Email: Rummana.official@gmail.com
 
 المطور / Developer
-حيدر المعموري / Hayder Al-Mamoori
-https://img.shields.io/badge/Portfolio-HayderMamoori.bio.link-green
-https://img.shields.io/badge/GitHub-HayderMamoori-black
+حيدر المعموري / HayderMamoori
+https://HayderMamoori.bio.link
+HayderMamoori https://github.com/HayderMamoori
 
 البحث العلمي / Research
 فرقد القزويني / Farqad Al-Qazwini
