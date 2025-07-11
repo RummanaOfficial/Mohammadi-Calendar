@@ -2,6 +2,7 @@
 
 تقويم شمسي نجمي ثابت ولا علاقة له بالقمر
 Fixed solar-stellar calendar 
+
 لمعاينة المشروع / see the project 
 
 
@@ -47,6 +48,10 @@ https://github.com/HayderMamoori
 البحث العلمي / Research
 
 السيد فرقد القزويني / Farqad Al-Qazwini
+
+مساهمة مع (طلبة السيد فرقد القزويني ،قحطان المعموري)
+
+
 MIT License
 
 Copyright (c) 2025 Rummana Co. & HayderMamoori
