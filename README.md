@@ -20,8 +20,8 @@ JavaScript (Vanilla)
 
 👥 فريق المشروع / Team
 شركة رمانة / Rummana Co.
-https://rummana.bio.link
-https://x.com/RummanaOfficial
+https://rummana.bio.link 
+https://x.com/RummanaOfficial 
 https://facebook.com/RummanaOfficial1
 https://instagram.com/rummana_official
 📧 Email: Rummana.official@gmail.com
