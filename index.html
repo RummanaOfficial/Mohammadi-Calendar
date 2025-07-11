@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقويم المحمدي الشمسي النجمي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Scheherazade+New:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a472a;
+            --secondary-color: #2e7d32;
+            --accent-color: #f9a825;
+            --light-color: #f4f9f4;
+            --dark-color: #0d2c17;
+            --gold-color: #c9b037;
+            --text-color: #2d2d2d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Scheherazade New', serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9f5eb);
+            color: var(--text-color);
+            line-height: 1.8;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%232e7d3250" d="M50,15 C60,5 80,5 85,15 C95,25 95,40 85,50 C75,60 60,60 50,50 C40,60 25,60 15,50 C5,40 5,25 15,15 C20,5 40,5 50,15 Z"/></svg>');
+            background-size: 120px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 2.5rem 0;
+            border-bottom: 5px solid var(--accent-color);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, transparent 20%, rgba(249, 168, 37, 0.1) 20%, transparent 21%);
+            background-size: 100px 100px;
+            transform: rotate(30deg);
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'El Messiri', sans-serif;
+            font-weight: 700;
+        }
+        
+        .calendar-container {
+            background: linear-gradient(to bottom, #ffffff, #f0f7f1);
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-top: -40px;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(46, 125, 50, 0.2);
+        }
+        
+        .calendar-header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calendar-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #dde9de;
+        }
+        
+        .calendar-day {
+            background-color: white;
+            min-height: 130px;
+            padding: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+            border-right: 1px solid #eaeaea;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .calendar-day:hover {
+            background-color: #f8fff8;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        
+        .day-header {
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .islamic-date {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+        
+        .gregorian-date {
+            color: #555;
+            font-size: 0.95rem;
+            background: #f0f7f1;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .current-day {
+            background-color: #fffce6;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 15px rgba(249, 168, 37, 0.3);
+        }
+        
+        .current-day .day-header {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .extra-days {
+            background-color: #f0f7ff;
+            border: 1px dashed #a0c4ff;
+        }
+        
+        .extra-days .islamic-date {
+            color: #1e3c78;
+            font-weight: 700;
+        }
+        
+        .converter-section {
+            background: linear-gradient(to bottom, #ffffff, #f8fbf8);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-top: 35px;
+            border: 1px solid rgba(46, 125, 50, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to bottom, var(--primary-color), var(--dark-color));
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to bottom, var(--secondary-color), var(--primary-color));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to bottom, var(--secondary-color), #1b5e20);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(to bottom, #4caf50, var(--secondary-color));
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .footer {
+            background: linear-gradient(to right, var(--dark-color), #1a472a);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0,0 Q50,10 100,0 L100,10 L0,10 Z" fill="%231a472a"/></svg>');
+            background-size: 100% 100%;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 12px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-icons a:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .month-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .month-btn {
+            flex: 1;
+            max-width: 130px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(46, 125, 50, 0.3);
+            border-radius: 8px;
+            padding: 8px 5px;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .month-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .highlight {
+            background: linear-gradient(to right, rgba(244, 249, 244, 0.8), rgba(234, 245, 234, 0.8));
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 0 15px 15px 0;
+            margin: 25px 0;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(3px);
+        }
+        
+        .year-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(to right, #e6f4e6, #d4ecd4);
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(46, 125, 50, 0.2);
+        }
+        
+        .year-info-item {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            border-right: 1px dashed rgba(46, 125, 50, 0.4);
+        }
+        
+        .year-info-item:last-child {
+            border-right: none;
+        }
+        
+        .year-info-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: 'El Messiri', sans-serif;
+        }
+        
+        .year-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+        }
+        
+        .year-selector button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .year-selector button:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        .year-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 120px;
+            text-align: center;
+            font-family: 'El Messiri', sans-serif;
+        }
+        
+        .moon-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--gold-color);
+            border-radius: 50%;
+            margin: 0 5px;
+            position: relative;
+            box-shadow: 0 0 8px rgba(201, 176, 55, 0.7);
+        }
+        
+        .moon-icon::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            background: linear-gradient(to bottom, #ffffff, #f8fbf8);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid rgba(46, 125, 50, 0.3);
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 110px;
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+            
+            .month-btn {
+                max-width: 100px;
+                font-size: 0.9rem;
+                padding: 6px 3px;
+            }
+            
+            .year-info {
+                flex-wrap: wrap;
+            }
+            
+            .year-info-item {
+                flex: 0 0 50%;
+                border-right: none;
+                border-bottom: 1px dashed rgba(46, 125, 50, 0.4);
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container header-content">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-calendar-alt me-2"></i>
+                التقويم المحمدي الشمسي النجمي
+            </h1>
+            <p class="lead fs-3">نتيجة بحث السيد الأستاذ فرقد الحسيني القزويني دام فيضه</p>
+            <div class="mt-4">
+                <span class="badge bg-light text-dark fs-5 p-3">
+                    <i class="fas fa-star me-2"></i>بداية التقويم: 1 رمضان 1 هـ = 16 أكتوبر 621 م
+                </span>
+            </div>
+        </div>
+    </header>
+<!-- قسم عرض تاريخ اليوم - يضاف قبل محول التاريخ -->
+<div class="today-date-container text-center p-3 mb-4" style="background: linear-gradient(135deg, #f0f7f0, #d4e8d4); border-radius: 10px; border-left: 5px solid #2e7d32;">
+    <h4 class="mb-3"><i class="fas fa-calendar-day me-2"></i>تاريخ اليوم</h4>
+    <div class="today-date-display fs-4 fw-bold text-primary">
+        <!-- سيتم ملؤه تلقائياً -->
+    </div>
+</div>
+
+<script>
+// دالة عرض تاريخ اليوم
+function showTodayDate() {
+    const today = new Date();
+    const islamicDate = convertToIslamic(today);
+    
+    document.querySelector('.today-date-display').innerHTML = `
+        <div>${formatDate(today)} <small>(الميلادي)</small></div>
+        <div class="mt-2">${islamicDate} <small>(المحمدي الشمسي)</small></div>
+    `;
+}
+
+// استدعاء الدالة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', showTodayDate);
+document.addEventListener('DOMContentLoaded', function() {
+    // احصل على التاريخ الحالي
+    const today = new Date();
+    
+    // احسب السنة المحمدية الحالية
+    const islamicDate = convertToIslamic(today);
+    const islamicYearMatch = islamicDate.match(/\d+$/);
+    if (islamicYearMatch) {
+        currentIslamicYear = parseInt(islamicYearMatch[0]);
+    }
+    
+    // احسب الشهر المحمدي الحالي
+    currentMonthIndex = getCurrentIslamicMonth(today);
+    
+    renderCalendar();
+    
+    // تحديث سنة التذييل
+    document.getElementById('current-year-footer').textContent = new Date().getFullYear();
+    
+    // ... باقي الكود كما هو ...
+});
+</script>
+    <div class="container my-5">
+        <div class="highlight">
+            <h4 class="d-flex align-items-center">
+                <i class="fas fa-info-circle me-3"></i>معلومات أساسية
+            </h4>
+            <p class="mb-0 fs-5">
+                التقويم المحمدي الشمسي النجمي هو تقويم شمسي نجمي يبدأ من هجرة النبي صلى الله عليه واله وسلم، ولا علاقة له بالقمر.            </p>
+        </div>
+
+        <div class="year-selector">
+            <button id="prev-year">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="year-display">
+                <span id="current-year">1404</span> هـ
+            </div>
+            <button id="next-year">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <div class="year-info">
+            <div class="year-info-item">
+                <div>أيام السنة</div>
+                <div class="year-info-value"><span id="year-days">365</span></div>
+            </div>
+            <div class="year-info-item">
+                <div>عدد الأشهر</div>
+                <div class="year-info-value">12</div>
+            </div>
+            <div class="year-info-item">
+                <div>أيام التقويم</div>
+                <div class="year-info-value"><span id="extra-days">5</span></div>
+            </div>
+            <div class="year-info-item">
+                <div>بداية السنة</div>
+                <div class="year-info-value"><span id="year-start">16/10/2024</span></div>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h2 id="current-month" class="mb-0">رمضان 1404</h2>
+            </div>
+            <div class="calendar" id="calendar"></div>
+        </div>
+
+        <div class="month-navigation">
+            <button class="month-btn" data-month="0">رمضان</button>
+            <button class="month-btn" data-month="1">شوال</button>
+            <button class="month-btn" data-month="2">جمادى الأولى</button>
+            <button class="month-btn" data-month="3">جمادى الآخرة</button>
+            <button class="month-btn" data-month="4">رجب</button>
+            <button class="month-btn" data-month="5">ربيع الأول</button>
+            <button class="month-btn" data-month="6">ربيع الآخر</button>
+            <button class="month-btn" data-month="7">ذي القعدة</button>
+            <button class="month-btn" data-month="8">ذي الحجة</button>
+            <button class="month-btn" data-month="9">محرم</button>
+            <button class="month-btn" data-month="10">صفر</button>
+            <button class="month-btn" data-month="11">شعبان</button>
+            <button class="month-btn" data-month="12">أيام التقويم</button>
+        </div>
+
+        <div class="converter-section">
+            <h3 class="text-center mb-4">
+                <i class="fas fa-exchange-alt me-3"></i>محول التاريخ
+            </h3>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-day me-2"></i>الميلادي إلى المحمدي
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">اختر تاريخ ميلادي:</label>
+                                <input type="date" id="gregorian-date" class="form-control" value="2024-10-16">
+                            </div>
+                            <button id="convert-to-islamic" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-arrow-right me-2"></i>تحويل
+                            </button>
+                            <div class="mt-4 p-3 bg-light rounded text-center border border-success border-2">
+                                <h5 class="text-muted">النتيجة:</h5>
+                                <div id="islamic-result" class="fs-3 fw-bold text-primary">1 رمضان 1404</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <i class="fas fa-calendar-alt me-2"></i>المحمدي إلى الميلادي
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">السنة:</label>
+                                <input type="number" id="islamic-year" class="form-control" value="1404" min="1">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">الشهر:</label>
+                                <select id="islamic-month" class="form-select">
+                                    <option value="0">رمضان</option>
+                                    <option value="1">شوال</option>
+                                    <option value="2">جمادى الأولى</option>
+                                    <option value="3">جمادى الآخرة</option>
+                                    <option value="4">رجب</option>
+                                    <option value="5">ربيع الأول</option>
+                                    <option value="6">ربيع الآخر</option>
+                                    <option value="7">ذي القعدة</option>
+                                    <option value="8">ذي الحجة</option>
+                                    <option value="9">محرم</option>
+                                    <option value="10">صفر</option>
+                                    <option value="11">شعبان</option>
+                                    <option value="12">أيام التقويم</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">اليوم:</label>
+                                <input type="number" id="islamic-day" class="form-control" min="1" max="30" value="1">
+                            </div>
+                            <button id="convert-to-gregorian" class="btn btn-primary w-100 py-3">
+                                <i class="fas fa-arrow-left me-2"></i>تحويل
+                            </button>
+                            <div class="mt-4 p-3 bg-light rounded text-center border border-success border-2">
+                                <h5 class="text-muted">النتيجة:</h5>
+                                <div id="gregorian-result" class="fs-3 fw-bold text-primary">16/10/2024</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center my-5">
+            <h3 class="mb-4">
+                <i class="fas fa-download me-3"></i>تحميل الرزنامة
+            </h3>
+            <div class="d-flex justify-content-center flex-wrap">
+                <button id="download-monthly" class="btn btn-success btn-lg mx-2 my-2">
+                    <i class="fas fa-file-pdf me-2"></i>تحميل رزنامة شهرية
+                </button>
+                <button id="download-yearly" class="btn btn-success btn-lg mx-2 my-2">
+                    <i class="fas fa-book me-2"></i>تحميل رزنامة سنوية
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-4 mb-md-0">
+                    <h4 class="mb-3">صمم بواسطة</h4>
+                    <h3 class="fw-bold">شركة <span class="text-warning">رمانة</span></h3>
+                    <p class="fs-5">نقدم حلول تقنية مبتكرة وموثوقة</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <h4 class="mb-3">تواصل معنا</h4>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/RummanaOfficial1/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/RummanaOfficial"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/rummana_official"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/channel/UCKpjKczMNJXVOvl637RTiug"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <a href="mailto:Rummana.official@gmail.com?subject=استفسار عن التقويم المحمدي الشمسي" 
+   class="text-decoration-none text-white">
+   <i class="fas fa-envelope me-2"></i>Rummana.official@gmail.com
+</a>
+                </div>
+            </div>
+            <div class="text-center mt-5 pt-4 border-top border-white border-opacity-25">
+                <p class="mb-1 fs-5">التقويم المحمدي الشمسي النجمي - نتيجة بحث السيد الأستاذ فرقد الحسيني القزويني دام فيضه</p>
+                <p class="mb-0">جميع الحقوق محفوظة © <span id="current-year-footer">2024</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // بداية التقويم: 16 أكتوبر 621 م (1 رمضان 1 هـ)
+        const HIJRA_YEAR = 1;
+        const HIJRA_DATE = new Date(621, 9, 16); // الشهر 9 = أكتوبر
+        
+        const MONTHS = [
+            "رمضان", "شوال", "جمادى الاولى", "جمادى الآخرة", 
+            "رجب", "ربيع الأول", "ربيع الآخِر", "ذي القعدة", 
+            "ذي الحجة", "محرم", "صفر", "شعبان"
+        ];
+        
+        const WEEKDAYS = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+        
+        let currentIslamicYear = 1404;
+        let currentMonthIndex = 0; // رمضان
+        
+        // حساب بداية سنة معينة
+        function getStartOfYear(islamicYear) {
+    const yearDiff = islamicYear - 1; // تأكد أن 1 هي سنة الهجرة الصحيحة
+    const start = new Date(621, 9, 16); // 16 أكتوبر 621 م
+    start.setFullYear(start.getFullYear() + yearDiff);
+    return start;
+}
+        
+        // حساب بداية شهر معين في سنة معينة
+        function getStartOfMonth(islamicYear, monthIndex) {
+            const startOfYear = getStartOfYear(islamicYear);
+            
+            if (monthIndex === 0) return new Date(startOfYear);
+            
+            const start = new Date(startOfYear);
+            start.setDate(start.getDate() + monthIndex * 30);
+            return start;
+        }
+        
+        // حساب عدد أيام السنة (365 أو 366)
+        function getYearDays(islamicYear) {
+            const start = getStartOfYear(islamicYear);
+            const end = new Date(start);
+            end.setFullYear(end.getFullYear() + 1);
+            end.setDate(end.getDate() - 1);
+            
+            const diffTime = Math.abs(end - start);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        }
+        
+        // حساب عدد أيام التقويم الإضافية
+        function getExtraDays(islamicYear) {
+            return getYearDays(islamicYear) - 360;
+        }
+        
+        // إنشاء التقويم لشهر معين
+        function renderCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendarEl.innerHTML = '';
+            
+            // إضافة عناوين الأيام
+            for (const day of WEEKDAYS) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day day-header';
+                dayEl.innerHTML = `<div>${day}</div>`;
+                calendarEl.appendChild(dayEl);
+            }
+            
+            const startOfMonth = getStartOfMonth(currentIslamicYear, currentMonthIndex);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // تحديد عدد أيام الشهر
+            const numDays = (currentMonthIndex === 12) ? getExtraDays(currentIslamicYear) : 30;
+            
+            // حساب يوم الأسبوع لبداية الشهر
+            let startDay = startOfMonth.getDay();
+            startDay = (startDay + 6) % 7; // تعديل ليتوافق مع بداية الأسبوع من السبت
+            
+            // ملء الأيام الفارغة قبل بداية الشهر
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarEl.appendChild(emptyDay);
+            }
+            
+            // إضافة أيام الشهر
+            for (let day = 1; day <= numDays; day++) {
+                const dayDate = new Date(startOfMonth);
+                dayDate.setDate(startOfMonth.getDate() + day - 1);
+                
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                
+                // إذا كان يوم التقويم
+                if (currentMonthIndex === 12) {
+                    dayEl.classList.add('extra-days');
+                }
+                
+                // إذا كان اليوم الحالي
+                if (dayDate.toDateString() === today.toDateString()) {
+                    dayEl.classList.add('current-day');
+                }
+                
+                // التاريخ الميلادي
+                const gregorianDate = formatDate(dayDate);
+                
+                // التاريخ المحمدي
+                let islamicDate;
+                if (currentMonthIndex === 12) {
+                    islamicDate = `يوم التقويم ${day}`;
+                } else {
+                    islamicDate = `${day} ${MONTHS[currentMonthIndex]}`;
+                }
+                
+                // التاريخ الهجري الشمسي
+                const islamicYear = currentIslamicYear;
+                
+                dayEl.innerHTML = `
+                    <div class="day-header">${day}</div>
+                    <div class="islamic-date">${islamicDate}</div>
+                    <div class="gregorian-date">${gregorianDate}</div>
+                    <div class="mt-2 text-muted small">${islamicYear} هـ</div>
+                `;
+                
+                calendarEl.appendChild(dayEl);
+            }
+            
+            // تحديث عنوان الشهر الحالي
+            const monthTitle = (currentMonthIndex === 12) ? 
+                `أيام التقويم ${currentIslamicYear}` : 
+                `${MONTHS[currentMonthIndex]} ${currentIslamicYear}`;
+                
+            document.getElementById('current-month').textContent = monthTitle;
+            
+            // تحديث معلومات السنة
+            document.getElementById('current-year').textContent = currentIslamicYear;
+            const yearDays = getYearDays(currentIslamicYear);
+            document.getElementById('year-days').textContent = yearDays;
+            const extraDays = getExtraDays(currentIslamicYear);
+            document.getElementById('extra-days').textContent = extraDays;
+            document.getElementById('year-start').textContent = formatDate(getStartOfYear(currentIslamicYear));
+        }
+        
+        // تنسيق التاريخ الميلادي
+        function formatDate(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // تحويل من ميلادي إلى محمدي
+        function convertToIslamic(date) {
+            // حساب الفرق بالأيام بين التاريخ المحدد وبداية التقويم
+            const start = new Date(HIJRA_DATE);
+            start.setHours(0, 0, 0, 0);
+            
+            const diffTime = Math.abs(date - start);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // حساب السنة المحمدية
+            const islamicYear = HIJRA_YEAR + Math.floor(diffDays / 365.2425);
+            
+            // حساب بداية السنة المحمدية
+            const startOfYear = getStartOfYear(islamicYear);
+            
+            // حساب الفرق بالأيام من بداية السنة
+            const startYearTime = Math.abs(date - startOfYear);
+            const daysInYear = Math.floor(startYearTime / (1000 * 60 * 60 * 24));
+            
+            // حساب الشهر واليوم
+            if (daysInYear < 360) {
+                const monthIndex = Math.floor(daysInYear / 30);
+                const day = (daysInYear % 30) + 1;
+                return `${day} ${MONTHS[monthIndex]} ${islamicYear}`;
+            } else {
+                const extraDay = daysInYear - 359;
+                return `يوم التقويم ${extraDay} - ${islamicYear}`;
+            }
+        }
+        
+        // تحويل من محمدي إلى ميلادي
+        function convertToGregorian(islamicYear, monthIndex, day) {
+            const startOfMonth = getStartOfMonth(islamicYear, monthIndex);
+            const date = new Date(startOfMonth);
+            date.setDate(startOfMonth.getDate() + day - 1);
+            return formatDate(date);
+        }
+        
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    // احصل على التاريخ الحالي
+    const today = new Date();
+    
+    // احسب السنة المحمدية الحالية
+    const islamicDate = convertToIslamic(today);
+    const islamicYearMatch = islamicDate.match(/\d+$/);
+    if (islamicYearMatch) {
+        currentIslamicYear = parseInt(islamicYearMatch[0]);
+    }
+    
+    // احسب الشهر المحمدي الحالي
+    currentMonthIndex = getCurrentIslamicMonth(today);
+    
+    renderCalendar();
+    
+    // تحديث سنة التذييل
+    document.getElementById('current-year-footer').textContent = new Date().getFullYear();
+    
+    // ... باقي الكود كما هو ...
+});
+            renderCalendar();
+            
+            // تحديث سنة التذييل
+            document.getElementById('current-year-footer').textContent = new Date().getFullYear();
+            
+            // التنقل بين الأشهر
+            document.querySelectorAll('.month-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentMonthIndex = parseInt(this.dataset.month);
+                    renderCalendar();
+                });
+            });
+            
+            // التنقل بين السنوات
+            document.getElementById('prev-year').addEventListener('click', function() {
+                currentIslamicYear--;
+                renderCalendar();
+            });
+            
+            document.getElementById('next-year').addEventListener('click', function() {
+                currentIslamicYear++;
+                renderCalendar();
+            });
+            
+            // تحويل من ميلادي إلى محمدي
+            document.getElementById('convert-to-islamic').addEventListener('click', function() {
+                const dateStr = document.getElementById('gregorian-date').value;
+                const dateParts = dateStr.split('-');
+                const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                document.getElementById('islamic-result').textContent = convertToIslamic(date);
+            });
+            
+            // تحويل من محمدي إلى ميلادي
+            document.getElementById('convert-to-gregorian').addEventListener('click', function() {
+                const year = parseInt(document.getElementById('islamic-year').value);
+                const monthIndex = parseInt(document.getElementById('islamic-month').value);
+                const day = parseInt(document.getElementById('islamic-day').value);
+                document.getElementById('gregorian-result').textContent = convertToGregorian(year, monthIndex, day);
+            });
+            
+            // تحميل الرزنامة (وظيفية تجميلية)
+            document.getElementById('download-monthly').addEventListener('click', function() {
+                alert('جاري تحميل الرزنامة الشهرية... (هذه وظيفة تجميلية)');
+            });
+            
+            document.getElementById('download-yearly').addEventListener('click', function() {
+                alert('جاري تحميل الرزنامة السنوية... (هذه وظيفة تجميلية)');
+            });
+            
+            // إظهار التاريخ الحالي في حقل الإدخال
+            const today = new Date();
+            const formattedToday = today.toISOString().split('T')[0];
+            document.getElementById('gregorian-date').value = formattedToday;
+        });
+	    // دالة للحصول على الشهر المحمدي الحالي من التاريخ الميلادي
+function getCurrentIslamicMonth(date) {
+    const startOfYear = getStartOfYear(currentIslamicYear);
+    const diffTime = Math.abs(date - startOfYear);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays >= 360) {
+        return 12; // أيام التقويم
+    } else {
+        return Math.floor(diffDays / 30);
+    }
+}
+    </script>
+</body>
+</html>
