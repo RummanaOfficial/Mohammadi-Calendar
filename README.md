@@ -2,6 +2,7 @@
 
 تقويم شمسي نجمي ثابت يبدأ من الهجرة النبوية (1 رمضان 1 هـ = 16 أكتوبر 621 م)  
 Fixed solar-stellar calendar starting from the Hijra (1 Ramadan 1 AH = 16 October 621 CE)
+
 لمعاينة المشروع / see the project 
 
 
@@ -23,18 +24,29 @@ JavaScript (Vanilla)
 
 👥 فريق المشروع / Team
 شركة رمانة / Rummana Co.
+
 https://rummana.bio.link 
+
 https://x.com/RummanaOfficial 
+
 https://facebook.com/RummanaOfficial1
+
 https://instagram.com/rummana_official
+
 📧 Email: Rummana.official@gmail.com
 
+
 المطور / Developer
+
 حيدر المعموري / HayderMamoori
+
 https://HayderMamoori.bio.link
-HayderMamoori https://github.com/HayderMamoori
+
+https://github.com/HayderMamoori
+
 
 البحث العلمي / Research
+
 فرقد القزويني / Farqad Al-Qazwini
 MIT License
 
