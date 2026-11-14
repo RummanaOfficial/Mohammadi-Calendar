@@ -57,7 +57,7 @@ MIT License
 Copyright (c) 2025 Rummana Co. & HayderMamoori
 
 
-## 🚀 الاستخدام / Usage
+##  الاستخدام / Usage
 ```bash
 git clone https://github.com/RummanaOfficial/Mohammadi-Calendar.git
 cd Mohammadi-Calendar
